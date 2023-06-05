@@ -33,9 +33,13 @@ int main() {
   bfs_set.insert(std::make_pair(0, 0));
 
   while (!bfs_set.empty()) {
+    int current_steps = (*bfs_set.begin()).first;
     int current_intersection = (*bfs_set.begin()).second;
     bfs_set.erase(bfs_set.begin());
-
+    
+    if (current_steps > intersection_steps[current_intersection]) 
+      continue;
+    
     std::vector<int> possible_roads;
 
     // from each intersection, we can either use the portal or move to the neighbouring intersections.
@@ -49,9 +53,6 @@ int main() {
       if (destination < number_of_intersections && destination >= 0 && (!intersection_visited[destination] || intersection_steps[current_intersection] + 1 < intersection_steps[destination])) {
         intersection_visited[destination] = true;
         
-        auto iterator_find = bfs_set.find(std::make_pair(intersection_steps[destination], destination));
-        if (iterator_find != bfs_set.end()) bfs_set.erase(iterator_find);
-
         intersection_steps[destination] = intersection_steps[current_intersection] + 1;
         bfs_set.insert(std::make_pair(intersection_steps[destination], destination));
       }
